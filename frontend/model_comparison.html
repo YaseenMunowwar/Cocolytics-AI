@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cocolytics AI - Model Comparison</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- i18next for multi-language support -->
+  <script src="https://unpkg.com/i18next@21.6.3/dist/umd/i18next.min.js"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
+            },
+            secondary: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f'
+            }
+          },
+          fontFamily: {
+            'sans': ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22c55e;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #15803d;
+    }
+    /* Smooth transitions */
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    .hover-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+    /* Gradient background for header */
+    .gradient-header {
+      background: linear-gradient(90deg, #15803d 0%, #16a34a 100%);
+    }
+    /* Sidebar Navigation Active Link */
+    .nav-link.active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+    /* Language select custom styling */
+    .lang-selector-container {
+      position: relative;
+      display: inline-block;
+    }
+    .lang-selector-container i.fa-globe {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #22c55e;
+    }
+    .lang-selector-container select {
+      padding-left: 2.5rem;
+    }
+  </style>
+</head>
+<body class="bg-primary-50 min-h-screen flex">
+  <!-- Mobile Navigation Toggle -->
+  <button id="mobileMenuToggle" class="fixed top-4 left-4 z-50 rounded-full p-2 bg-primary-600 text-white md:hidden">
+    <i class="fas fa-bars"></i>
+  </button>
+  
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="flex flex-col bg-white shadow-xl w-64 min-h-screen p-5 fixed left-0 top-0 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 -translate-x-full rounded-r-lg">
+    <div class="flex-1">
+      <div class="mb-8 text-center">
+        <div class="w-20 h-20 mx-auto rounded-full bg-primary-100 overflow-hidden flex items-center justify-center">
+          <img src="images/logo.svg" alt="Cocolytics AI Logo" class="w-20 h-20 object-contain" />
+        </div>
+        <h2 class="text-2xl font-bold text-primary-800 mt-3">Cocolytics AI</h2>
+        <p class="text-sm text-gray-500">Coconut Price Intelligence</p>
+      </div>
+      <ul class="mt-8 space-y-1">
+        <li>
+          <a href="dashboard.html" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-i18n="dashboard">
+            <i class="fas fa-tachometer-alt mr-3"></i>
+            <span data-i18n="dashboard">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="historical_data.html" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-i18n="historical">
+            <i class="fas fa-history mr-3"></i>
+            <span data-i18n="historical">Historical Data</span>
+          </a>
+        </li>
+        <li>
+          <a href="forecast_viewer.html" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-i18n="forecastNav">
+            <i class="fas fa-chart-line mr-3"></i>
+            <span data-i18n="forecastNav">Forecast Viewer</span>
+          </a>
+        </li>
+        <li>
+          <a href="model_comparison.html" class="nav-link flex items-center p-3 rounded-lg bg-primary-100 text-primary-800 transition-all" data-i18n="comparisonNav">
+            <i class="fas fa-balance-scale mr-3"></i>
+            <span data-i18n="comparisonNav">Model Comparison</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- Sidebar Footer -->
+    <div class="pt-4 border-t border-gray-200">
+      <p class="text-xs text-gray-500 text-center">© 2025 Cocolytics AI</p>
+    </div>
+  </nav>
+  
+  <!-- Main Content Area -->
+  <div class="flex-1 md:ml-64 flex flex-col">
+    <!-- Header -->
+    <header class="gradient-header p-4 sticky top-0 z-30 shadow-md flex justify-between items-center text-white rounded-b-lg">
+      <div class="flex items-center space-x-4">
+        <h1 class="text-xl font-bold flex items-center" data-i18n="toolName">
+          <i class="fas fa-leaf mr-2"></i> Cocolytics AI
+        </h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="lang-selector-container">
+          <i class="fas fa-globe"></i>
+          <select id="languageSelector" class="py-2 pr-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white text-primary-800">
+            <option value="en">English</option>
+            <option value="si">සිංහල</option>
+            <option value="ta">தமிழ்</option>
+          </select>
+        </div>
+        <div class="relative">
+          <button id="userDropdown" class="flex items-center space-x-2 focus:outline-none">
+            <div class="w-8 h-8 rounded-full bg-primary-800 flex items-center justify-center text-xs font-bold">AD</div>
+            <span class="hidden md:inline-block">Admin</span>
+            <i class="fas fa-chevron-down text-xs"></i>
+          </button>
+          <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden">
+            <a href="profile.html" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+              <i class="fas fa-user mr-2"></i> <span data-i18n="profile">Profile</span>
+            </a>
+            <a href="settings.html" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+              <i class="fas fa-cog mr-2"></i> <span data-i18n="settings">Settings</span>
+            </a>
+            <div class="border-t border-gray-200 my-1"></div>
+            <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+              <i class="fas fa-sign-out-alt mr-2"></i> <span data-i18n="logout">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Page Content: Model Comparison -->
+    <main class="p-6 flex-1 overflow-auto">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4" data-i18n="modelComparison">Model Comparison</h2>
+      
+      <!-- Section: Predictions Chart -->
+      <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+        <canvas id="comparisonChart"></canvas>
+      </div>
+      
+      <!-- Section: Predictions Table -->
+      <div class="bg-white rounded-xl shadow-md p-5 mb-6 overflow-auto">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Predictions Summary</h3>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Date</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Actual Price</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">ARIMA</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">SARIMA</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">ARIMAX</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">SARIMAX</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">XGBoost</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">TFT <i class="fas fa-crown text-yellow-500"></i></th>
+            </tr>
+          </thead>
+          <tbody id="comparisonTableBody" class="divide-y divide-gray-100">
+            <!-- Data rows will be injected via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Section: Performance Metrics -->
+      <div class="bg-white rounded-xl shadow-md p-5 overflow-auto">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Model Performance Metrics</h3>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Model</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">MAE</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">RMSE</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">MAPE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-700">TFT Predicted <i class="fas fa-crown text-yellow-500"></i></td>
+              <td class="px-4 py-2 text-sm text-gray-700">2.917734</td>
+              <td class="px-4 py-2 text-sm text-gray-700">3.354053</td>
+              <td class="px-4 py-2 text-sm text-gray-700">3.367438</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-700">SARIMAX Predicted</td>
+              <td class="px-4 py-2 text-sm text-gray-700">4.796692</td>
+              <td class="px-4 py-2 text-sm text-gray-700">5.008806</td>
+              <td class="px-4 py-2 text-sm text-gray-700">5.518212</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-700">ARIMAX Predicted</td>
+              <td class="px-4 py-2 text-sm text-gray-700">4.800388</td>
+              <td class="px-4 py-2 text-sm text-gray-700">5.439502</td>
+              <td class="px-4 py-2 text-sm text-gray-700">5.442124</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-700">SARIMA Predicted</td>
+              <td class="px-4 py-2 text-sm text-gray-700">6.409174</td>
+              <td class="px-4 py-2 text-sm text-gray-700">7.004606</td>
+              <td class="px-4 py-2 text-sm text-gray-700">7.314453</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-700">ARIMA Predicted</td>
+              <td class="px-4 py-2 text-sm text-gray-700">6.255143</td>
+              <td class="px-4 py-2 text-sm text-gray-700">7.725970</td>
+              <td class="px-4 py-2 text-sm text-gray-700">6.994512</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 text-sm text-gray-700">XGBoost Predicted</td>
+              <td class="px-4 py-2 text-sm text-gray-700">9.969732</td>
+              <td class="px-4 py-2 text-sm text-gray-700">10.963399</td>
+              <td class="px-4 py-2 text-sm text-gray-700">11.367499</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-sm text-gray-700 mt-2"><strong>Best Model: TFT Predicted</strong></p>
+      </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 p-4 text-center text-gray-500 text-sm mt-auto">
+      <p>© 2025 Cocolytics AI | Powered by TFT Forecasting Technology</p>
+      <p class="mt-1">
+        <a href="terms.html" class="text-primary-600 hover:text-primary-800 mx-2">Terms</a> |
+        <a href="privacy.html" class="text-primary-600 hover:text-primary-800 mx-2">Privacy</a> |
+        <a href="support.html" class="text-primary-600 hover:text-primary-800 mx-2">Support</a>
+      </p>
+    </footer>
+  </div>
+  
+  <!-- JavaScript Section -->
+  <script>
+    // Mobile Navigation Toggle
+    document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    });
+    
+    // User Dropdown Toggle
+    document.getElementById('userDropdown').addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.getElementById('userMenu').classList.toggle('hidden');
+    });
+    document.addEventListener('click', function(event) {
+      const userDropdown = document.getElementById('userDropdown');
+      const userMenu = document.getElementById('userMenu');
+      if (!userDropdown.contains(event.target) && !userMenu.contains(event.target)) {
+        userMenu.classList.add('hidden');
+      }
+    });
+    
+    // Update Current Month Display
+    function updateCurrentMonth() {
+      const now = new Date();
+      let monthName, year = now.getFullYear();
+      if (i18next.language === 'si') {
+        const monthNames_si = ["ජනවාරි", "පෙබරවාරි", "මාර්තු", "අප්රේල්", "මැයි", "ජූනි", "ජූලි", "අගෝස්තු", "සැප්තැම්බර්", "ඔක්තෝබර්", "නොවැම්බර්", "දෙසැම්බර්"];
+        monthName = monthNames_si[now.getMonth()];
+      } else if (i18next.language === 'ta') {
+        const monthNames_ta = ["ஜனவரி", "பிப்ரவரி", "மார்ச்", "ஏப்ரல்", "மே", "ஜூன்", "ஜூலை", "ஆகஸ்ட்", "செப்டம்பர்", "அக்டோபர்", "நவம்பர்", "டிசம்பர்"];
+        monthName = monthNames_ta[now.getMonth()];
+      } else {
+        monthName = now.toLocaleDateString('en-US', { month: 'long' });
+      }
+      const currentMonthDisplay = document.getElementById('currentMonthDisplay');
+      if (currentMonthDisplay) {
+        currentMonthDisplay.textContent = monthName + " " + year;
+      }
+    }
+    updateCurrentMonth();
+    
+    // i18next Initialization for Model Comparison Page
+    i18next.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "Dashboard",
+            "historical": "Historical Data",
+            "forecastNav": "Forecast Viewer",
+            "comparisonNav": "Model Comparison",
+            "profile": "Profile",
+            "settings": "Settings",
+            "logout": "Logout",
+            "currentMonth": "Current Month",
+            "welcomeDashboard": "Welcome to Cocolytics AI",
+            "dashboardIntro": "Your one-stop solution for coconut price forecasting in Sri Lanka.",
+            "bestModel": "Best Model",
+            "currentPrice": "Current Price",
+            "exogenousCardTitle": "Exogenous Variables",
+            "exogenousCardDesc": "Included 5 exogenous variables",
+            "historicalCardDesc": "Explore and analyze past trends.",
+            "forecastCardDesc": "View detailed projections.",
+            "viewMore": "View More",
+            "keyInsights": "Key Insights & Model Comparison",
+            "insight1": "The system identifies fluctuations in Kurunegala Producer Price",
+            "insight2": "It monitors changes in Puttalam Producer Price",
+            "insight3": "It tracks the movement in Gampaha Producer Price",
+            "insight4": "Exchange Rate (USD to LKR) variations are assessed",
+            "insight5": "Fuel Price shifts directly influence costs",
+            "learnMore": "Learn More",
+            "modelComparison": "Model Comparison"
+          }
+        },
+        si: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "උපකරණ පුවරුව",
+            "historical": "ඉතිහාස දත්ත",
+            "forecastNav": "පූර්වකථන දර්ශකය",
+            "comparisonNav": "ආදර්ශ සසඳීම",
+            "profile": "පැතිකඩ",
+            "settings": "සැකසුම්",
+            "logout": "ප්‍රस्थानය",
+            "currentMonth": "වත්මන් මාසය",
+            "welcomeDashboard": "Cocolytics AI වෙත සාදරයෙන් පිළිගනිමු",
+            "dashboardIntro": "ශ්‍රී ලංකාවේ පොත්පල මිල පූර්වකථනය සඳහා ඔබේ එකම විසඳුම.",
+            "bestModel": "හොඳම ආදර්ශය",
+            "currentPrice": "වත්මන් මිල",
+            "exogenousCardTitle": "බාහිර චරිත",
+            "exogenousCardDesc": "බාහිර චරිත 5 ඇතුළත්",
+            "historicalCardDesc": "Explore and analyze past trends.",
+            "forecastCardDesc": "View detailed projections.",
+            "viewMore": "View More",
+            "keyInsights": "ප්‍රධාන අවබෝධ සහ ආදර්ශ සසඳීම",
+            "insight1": "පද්ධතිය කරුණේගල නිෂ්පාදක මිල වෙනස්වීම් හඳුනාගනී",
+            "insight2": "පත්තලම් නිෂ්පාදක මිල වෙනස්වීම් පරීක්ෂා කරයි",
+            "insight3": "ගම්පහ නිෂ්පාදක මිල ගමන නිරීක්ෂණය කරයි",
+            "insight4": "එක්සචේන්ජ් රේට් (USD to LKR) වෙනස්වීම් ඇගැයෙයි",
+            "insight5": "උල්පාධන මිල වෙනස්වීම් පසුබැසි වියදම් බලපායි",
+            "learnMore": "තවදුරටත් බලන්න",
+            "modelComparison": "ආදර්ශ සසඳීම"
+          }
+        },
+        ta: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "டாஷ்போர்டு",
+            "historical": "வரலாற்று தரவுகள்",
+            "forecastNav": "முன்னறிவிப்பு காட்சியாளர்",
+            "comparisonNav": "மாதிரி ஒப்பீடு",
+            "profile": "சுயசரணம்",
+            "settings": "அமைப்புகள்",
+            "logout": "வெளியேறு",
+            "currentMonth": "தற்போதைய மாதம்",
+            "welcomeDashboard": "Cocolytics AI க்கு வரவேற்பு",
+            "dashboardIntro": "இலங்கையில் தேங்காய் விலை முன்னறிவிப்பிற்கு உங்கள் ஒரே தீர்வு.",
+            "bestModel": "சிறந்த மாதிரி",
+            "currentPrice": "தற்போதைய விலை",
+            "exogenousCardTitle": "வெளிப்புற மாறிகள்",
+            "exogenousCardDesc": "5 வெளிப்புற மாறிகள் உள்ளடக்கம்",
+            "historicalCardDesc": "Explore and analyze past trends.",
+            "forecastCardDesc": "View detailed projections.",
+            "viewMore": "View More",
+            "keyInsights": "முக்கிய தகவல்கள் மற்றும் மாதிரி ஒப்பீடு",
+            "insight1": "குருநகலா உற்பத்தியாளர் விலையில் மாற்றங்கள் கண்டறியப்படுகிறது",
+            "insight2": "புத்தளம் உற்பத்தியாளர் விலையில் மாற்றங்கள் கண்காணிக்கப்படுகிறது",
+            "insight3": "கம்பகா உற்பத்தியாளர் விலை இயக்கம் கண்காணிக்கப்படுகிறது",
+            "insight4": "விண்ணப்ப விலை (USD to LKR) மாறுபாடுகள் மதிப்பிடப்படுகின்றன",
+            "insight5": "எரிபொருள் விலை மாற்றங்கள் நேரடியாக செலவுகளைக் காட்டுகிறது",
+            "learnMore": "மேலும் அறிவு",
+            "modelComparison": "மாதிரி ஒப்பீடு"
+          }
+        }
+      }
+    }, function(err, t) {
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        el.innerText = i18next.t(el.getAttribute('data-i18n'));
+      });
+      updateCurrentMonth();
+    });
+    
+    document.getElementById('languageSelector').addEventListener('change', function() {
+      const newLang = this.value;
+      i18next.changeLanguage(newLang, function() {
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          el.innerText = i18next.t(el.getAttribute('data-i18n'));
+        });
+        updateCurrentMonth();
+      });
+    });
+    
+    // Sample dataset for model predictions (usually retrieved from a server or CSV)
+    const modelData = [
+      { date: "2023-01-01", actual: 86.11, arima: 80.908178, sarima: 80.847423, arimax: 82.883277, sarimax: 83.264365, xgboost: 80.821449, tft: 83.985001 },
+      { date: "2023-02-01", actual: 89.07, arima: 81.270143, sarima: 82.009439, arimax: 84.232536, sarimax: 83.85693,  xgboost: 80.70446,  tft: 86.615601 },
+      { date: "2023-03-01", actual: 91.31, arima: 80.534067, sarima: 82.645533, arimax: 85.129046, sarimax: 86.341083, xgboost: 77.055237, tft: 88.389603 },
+      { date: "2023-04-01", actual: 93.82, arima: 80.036482, sarima: 82.243995, arimax: 85.159714, sarimax: 86.474582, xgboost: 75.952812, tft: 88.718399 },
+      { date: "2023-05-01", actual: 91.84, arima: 79.602486, sarima: 80.9063,   arimax: 83.593921, sarimax: 84.942902, xgboost: 76.298599, tft: 86.582802 },
+      { date: "2023-06-01", actual: 86.80, arima: 79.311531, sarima: 79.570327, arimax: 80.053432, sarimax: 80.923583, xgboost: 76.243118, tft: 82.176994 },
+      { date: "2023-07-01", actual: 82.49, arima: 79.292289, sarima: 75.603349, arimax: 79.262252, sarimax: 77.393302, xgboost: 75.286995, tft: 77.936897 },
+      { date: "2023-08-01", actual: 79.18, arima: 79.33771,  sarima: 74.350147, arimax: 78.61849,  sarimax: 75.709831, xgboost: 75.287193, tft: 75.565903 },
+      { date: "2023-09-01", actual: 78.77, arima: 79.429458, sarima: 75.745312, arimax: 77.258631, sarimax: 75.727372, xgboost: 73.847137, tft: 76.388496 },
+      { date: "2023-10-01", actual: 79.57, arima: 79.521855, sarima: 77.451083, arimax: 77.494829, sarimax: 76.65944,  xgboost: 74.20163,  tft: 80.4487 },
+      { date: "2023-11-01", actual: 84.00, arima: 79.56904,  sarima: 80.453366, arimax: 78.602165, sarimax: 79.469418, xgboost: 71.541077, tft: 84.703102 },
+      { date: "2023-12-01", actual: 88.87, arima: 79.589386, sarima: 83.093643, arimax: 81.937049, sarimax: 83.506893, xgboost: 74.953506, tft: 88.469299 }
+    ];
+    
+    // Populate the predictions table
+    function populateComparisonTable(data) {
+      const tableBody = document.getElementById("comparisonTableBody");
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="px-4 py-2 text-sm text-gray-700">${row.date}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.actual}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.arima}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.sarima}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.arimax}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.sarimax}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.xgboost}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.tft}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+    populateComparisonTable(modelData);
+    
+    // Create Chart.js chart for Model Comparison
+    function createComparisonChart(data) {
+      const labels = data.map(row => row.date);
+      // Create datasets for each prediction category.
+      const datasets = [
+        {
+          label: "Actual Prices",
+          data: data.map(row => row.actual),
+          borderColor: "black",
+          backgroundColor: "rgba(0, 0, 0, 0.1)",
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "ARIMA Predicted",
+          data: data.map(row => row.arima),
+          borderColor: "red",
+          backgroundColor: "rgba(255, 0, 0, 0.1)",
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "SARIMA Predicted",
+          data: data.map(row => row.sarima),
+          borderColor: "orange",
+          backgroundColor: "rgba(255, 165, 0, 0.1)",
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "ARIMAX Predicted",
+          data: data.map(row => row.arimax),
+          borderColor: "purple",
+          backgroundColor: "rgba(128, 0, 128, 0.1)",
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "SARIMAX Predicted",
+          data: data.map(row => row.sarimax),
+          borderColor: "brown",
+          backgroundColor: "rgba(165, 42, 42, 0.1)",
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: "XGBoost Predicted",
+          data: data.map(row => row.xgboost),
+          borderColor: "gray",
+          backgroundColor: "rgba(128, 128, 128, 0.1)",
+          fill: false,
+          tension: 0.1
+        },
+        {
+          // Highlight TFT with a crown emoji/icon in the label (using HTML in legend is not directly supported so we include text)
+          label: "TFT Predicted (Best) \u{1F451}",
+          data: data.map(row => row.tft),
+          borderColor: "green",
+          backgroundColor: "rgba(22, 163, 74, 0.2)",
+          fill: false,
+          tension: 0.1
+        }
+      ];
+      
+      const ctx = document.getElementById('comparisonChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Model Predictions vs Actual Prices' }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Date' } },
+            y: { title: { display: true, text: 'Price' } }
+          }
+        }
+      });
+    }
+    createComparisonChart(modelData);
+  </script>
+</body>
+</html>

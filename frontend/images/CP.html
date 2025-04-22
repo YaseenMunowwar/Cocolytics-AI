@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Coconut Price Forecasting Concept Map</title>
+  <!-- Tailwind CSS via CDN for styling -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff; /* White background */
+      font-family: sans-serif;
+    }
+    /* Ensure the SVG container scrolls properly */
+    .svg-container {
+      width: 100%;
+      height: calc(100vh - 300px);
+      overflow: auto;
+      padding-bottom: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="flex flex-col items-center w-full h-full bg-white p-4">
+    <h2 class="text-2xl font-bold text-green-800 mb-4">Coconut Price Forecasting Concept Map</h2>
+    
+    <div class="svg-container">
+      <svg viewBox="-600 -450 1200 900" class="w-full" style="min-height: 600px;">
+        <!-- Background decoration -->
+        <defs>
+          <radialGradient id="centerGradient" cx="0" cy="0" r="250" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f0fdf6" />
+            <stop offset="100%" stop-color="#f0fdf6" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r="250" fill="url(#centerGradient)" />
+        
+        <!-- Main concept in the center -->
+        <g>
+          <circle cx="0" cy="0" r="80" fill="#16a34a" />
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-bold" font-size="20">Cocolytics AI</text>
+          <text x="0" y="25" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="text-xs" font-size="12">Coconut Price</text>
+          <text x="0" y="45" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="text-xs" font-size="12">Forecasting</text>
+        </g>
+        
+        <!-- First-level branches -->
+        <!-- Forecasting Models -->
+        <g>
+          <path d="M 60,60 L 200,200" stroke="#15803d" stroke-width="3" fill="none" />
+          <circle cx="220" cy="220" r="70" fill="#22c55e" />
+          <text x="220" y="210" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Forecasting</text>
+          <text x="220" y="230" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Models</text>
+        </g>
+        
+        <!-- Data Sources -->
+        <g>
+          <path d="M 60,-60 L 200,-200" stroke="#15803d" stroke-width="3" fill="none" />
+          <circle cx="220" cy="-220" r="70" fill="#22c55e" />
+          <text x="220" y="-220" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Data Sources</text>
+        </g>
+        
+        <!-- Performance Metrics -->
+        <g>
+          <path d="M -60,60 L -200,200" stroke="#15803d" stroke-width="3" fill="none" />
+          <circle cx="-220" cy="220" r="70" fill="#22c55e" />
+          <text x="-220" y="210" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Performance</text>
+          <text x="-220" y="230" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Metrics</text>
+        </g>
+        
+        <!-- Practical Applications -->
+        <g>
+          <path d="M -60,-60 L -200,-200" stroke="#15803d" stroke-width="3" fill="none" />
+          <circle cx="-220" cy="-220" r="70" fill="#22c55e" />
+          <text x="-220" y="-220" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Practical</text>
+          <text x="-220" y="-200" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Applications</text>
+        </g>
+        
+        <!-- Second-level branches of Forecasting Models -->
+        <!-- ARIMA & Time Series Models -->
+        <g>
+          <path d="M 280,230 L 380,280" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="400" cy="300" r="50" fill="#4ade80" />
+          <text x="400" y="290" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">ARIMA &</text>
+          <text x="400" y="310" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Time Series</text>
+        </g>
+        
+        <!-- GARCH & Volatility Models -->
+        <g>
+          <path d="M 290,200 L 380,150" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="410" cy="140" r="50" fill="#4ade80" />
+          <text x="410" y="130" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">GARCH &</text>
+          <text x="410" y="150" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Volatility</text>
+        </g>
+        
+        <!-- Neural Networks & Deep Learning -->
+        <g>
+          <path d="M 260,290 L 330,370" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="360" cy="400" r="50" fill="#4ade80" />
+          <text x="360" y="390" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Neural</text>
+          <text x="360" y="410" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Networks &</text>
+          <text x="360" y="430" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">Deep Learning</text>
+        </g>
+        
+        <!-- Hybrid Models -->
+        <g>
+          <path d="M 180,280 L 200,370" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="210" cy="400" r="50" fill="#4ade80" />
+          <text x="210" y="400" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Hybrid</text>
+          <text x="210" y="420" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Models</text>
+        </g>
+        
+        <!-- Second-level branches of Data Sources -->
+        <!-- Government Statistics -->
+        <g>
+          <path d="M 280,-230 L 380,-280" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="400" cy="-300" r="50" fill="#4ade80" />
+          <text x="400" y="-300" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Government</text>
+          <text x="400" y="-280" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Statistics</text>
+        </g>
+        
+        <!-- Weather Data -->
+        <g>
+          <path d="M 290,-200 L 380,-150" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="410" cy="-140" r="50" fill="#4ade80" />
+          <text x="410" y="-140" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Weather</text>
+          <text x="410" y="-120" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Data</text>
+        </g>
+        
+        <!-- Second-level branches of Performance Metrics -->
+        <!-- Error Metrics -->
+        <g>
+          <path d="M -280,230 L -380,280" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="-400" cy="300" r="50" fill="#4ade80" />
+          <text x="-400" y="290" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Error</text>
+          <text x="-400" y="310" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Metrics</text>
+        </g>
+        
+        <!-- Forecast Horizon -->
+        <g>
+          <path d="M -290,200 L -380,150" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="-410" cy="140" r="50" fill="#4ade80" />
+          <text x="-410" y="130" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Forecast</text>
+          <text x="-410" y="150" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Horizon</text>
+        </g>
+        
+        <!-- Second-level branches of Practical Applications -->
+        <!-- For Farmers -->
+        <g>
+          <path d="M -280,-230 L -380,-280" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="-400" cy="-300" r="50" fill="#4ade80" />
+          <text x="-400" y="-300" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">For</text>
+          <text x="-400" y="-280" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Farmers</text>
+        </g>
+        
+        <!-- For Traders -->
+        <g>
+          <path d="M -290,-200 L -380,-150" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="-410" cy="-140" r="50" fill="#4ade80" />
+          <text x="-410" y="-140" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">For</text>
+          <text x="-410" y="-120" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Traders</text>
+        </g>
+        
+        <!-- For Policymakers -->
+        <g>
+          <path d="M -260,-290 L -330,-370" stroke="#15803d" stroke-width="2" fill="none" />
+          <circle cx="-360" cy="-400" r="50" fill="#4ade80" />
+          <text x="-360" y="-400" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">For</text>
+          <text x="-360" y="-380" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="12">Policymakers</text>
+        </g>
+        
+        <!-- Third-level branches for ARIMA -->
+        <g>
+          <path d="M 440,320 L 480,350" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="500" cy="360" r="30" fill="#bbf7d1" />
+          <text x="500" y="360" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">ARIMA</text>
+        </g>
+        
+        <g>
+          <path d="M 430,340 L 460,390" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="470" cy="410" r="30" fill="#bbf7d1" />
+          <text x="470" y="410" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">SARIMA</text>
+        </g>
+        
+        <!-- Third-level branches for Neural Networks -->
+        <g>
+          <path d="M 400,420 L 460,450" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="480" cy="460" r="30" fill="#bbf7d1" />
+          <text x="480" y="460" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">LSTM</text>
+        </g>
+        
+        <g>
+          <path d="M 380,450 L 410,490" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="420" cy="510" r="30" fill="#bbf7d1" />
+          <text x="420" y="510" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">ANN</text>
+        </g>
+        
+        <!-- Third-level branches for Hybrid Models -->
+        <g>
+          <path d="M 220,450 L 230,490" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="240" cy="510" r="30" fill="#bbf7d1" />
+          <text x="240" y="505" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">ARIMA-</text>
+          <text x="240" y="515" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">NARNET</text>
+        </g>
+        
+        <g>
+          <path d="M 160,420 L 140,460" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="130" cy="480" r="30" fill="#bbf7d1" />
+          <text x="130" y="475" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">ARIMA-</text>
+          <text x="130" y="485" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">LSTM</text>
+        </g>
+        
+        <!-- Third-level branches for Government Statistics -->
+        <g>
+          <path d="M 440,-320 L 480,-350" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="500" cy="-360" r="30" fill="#bbf7d1" />
+          <text x="500" y="-365" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">Coconut Dev.</text>
+          <text x="500" y="-355" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">Authority</text>
+        </g>
+        
+        <g>
+          <path d="M 430,-340 L 460,-390" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="470" cy="-410" r="30" fill="#bbf7d1" />
+          <text x="470" y="-415" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">Central Bank</text>
+          <text x="470" y="-405" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">of Sri Lanka</text>
+        </g>
+        
+        <!-- Third-level branches for Error Metrics -->
+        <g>
+          <path d="M -440,320 L -480,350" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="-500" cy="360" r="30" fill="#bbf7d1" />
+          <text x="-500" y="360" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">RMSE</text>
+        </g>
+        
+        <g>
+          <path d="M -430,340 L -460,390" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="-470" cy="410" r="30" fill="#bbf7d1" />
+          <text x="-470" y="410" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="10">MAPE</text>
+        </g>
+        
+        <!-- Future Research Challenges - added to the bottom -->
+        <g>
+          <path d="M 0,80 L 0,240" stroke="#15803d" stroke-width="3" fill="none" />
+          <circle cx="0" cy="290" r="70" fill="#22c55e" />
+          <text x="0" y="280" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Future</text>
+          <text x="0" y="300" text-anchor="middle" dominant-baseline="middle" fill="#ffffff" class="font-semibold" font-size="16">Research</text>
+        </g>
+        
+        <!-- Branches for Future Research -->
+        <g>
+          <path d="M 40,340 L 100,370" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="120" cy="380" r="30" fill="#bbf7d1" />
+          <text x="120" y="375" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">Climate</text>
+          <text x="120" y="385" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">Change</text>
+        </g>
+        
+        <g>
+          <path d="M -40,340 L -100,370" stroke="#15803d" stroke-width="1.5" fill="none" />
+          <circle cx="-120" cy="380" r="30" fill="#bbf7d1" />
+          <text x="-120" y="375" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">Explainable</text>
+          <text x="-120" y="385" text-anchor="middle" dominant-baseline="middle" fill="#1e293b" class="font-medium" font-size="8">AI</text>
+        </g>
+      </svg>
+    </div>
+    
+    <!-- Key Findings Section -->
+    <div class="w-full max-w-3xl bg-white rounded-xl shadow-md p-6 mt-4">
+      <h3 class="text-lg font-bold text-green-800 mb-2">Key Findings from the Literature</h3>
+      <ul class="list-disc pl-6 space-y-2 text-gray-700">
+        <li>Traditional statistical models like ARIMA provide a strong baseline but machine learning approaches (ANNs, LSTM, SVR) often demonstrate superior performance with lower error metrics.</li>
+        <li>Hybrid models that combine linear and nonlinear techniques (e.g., ARIMA-NARNET) show promising results, capturing both linear trends and nonlinear patterns.</li>
+        <li>Coconut price forecasting is essential for multiple stakeholders: farmers, traders, processors, policymakers, and consumers.</li>
+        <li>Main data sources in Sri Lanka include the Coconut Development Authority, Department of Census and Statistics, and Central Bank of Sri Lanka.</li>
+        <li>Future research should address climate change impacts, data limitations, model interpretability, and integration with decision systems.</li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Button to save the SVG as a PNG -->
+  <div style="text-align:center; margin-top: 1rem;">
+    <button id="saveImage" class="bg-green-500 text-white px-4 py-2 rounded">Save SVG as PNG</button>
+  </div>
+  
+  <!-- JavaScript to convert SVG to PNG using a canvas -->
+  <script>
+    document.getElementById('saveImage').addEventListener('click', function() {
+      const svg = document.querySelector('svg');
+      const serializer = new XMLSerializer();
+      const source = serializer.serializeToString(svg);
+      
+      // Create a canvas element with dimensions matching the SVG viewBox
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 900;
+      
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0);
+        const a = document.createElement('a');
+        a.download = 'concept-map.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+      // Convert the SVG source to a data URI
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+Below is a revised version of your code that incorporates the changes you described. In this update:
+Dashboard
+
+Header Changes:
+• The language switcher (with a globe icon) has been moved to the top header. It now sits to the right of the admin dropdown with a small horizontal gap.
+• The “Current Date” label is replaced by “Current Month” (showing only the month and year).
+
+Sidebar Navigation Updates:
+• Each navigation link now has an icon (using Font Awesome).
+• The “Dashboard” link is now active by default (with a different background and text color).
+
+Dashboard Cards and Content:
+• The “Current Trend” card is removed.
+• The “Current Price” card now displays a hard-coded April 2025 price of Rs 215.00.
+• In the “Key Insights” section, the old insights have been replaced by a list showing the seven input factors:
+
+date
+
+retail_price_lkr
+
+kurunegala_producer_price_lkr
+
+puttalam_producer_price_lkr
+
+gampaha_producer_price_lkr
+
+exchange_rate_usd_to_lkr
+
+fuel_price_lad
+• The “Price Overview” chart has been removed.
+• The “Next 12 Months Forecast” card is removed and replaced by two cards:
+
+One that redirects users to “Explore and Analyze Historical Data”
+
+Another for “Forecast for Next 12 Months” with the proper redirections.
+

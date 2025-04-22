@@ -1,1 +1,0 @@
-# ChromaDB connection and operations 

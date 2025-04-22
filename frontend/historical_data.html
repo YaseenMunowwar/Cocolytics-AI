@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cocolytics AI - Historical Data</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- i18next for multi-language support (only for this page) -->
+  <script src="https://unpkg.com/i18next@21.6.3/dist/umd/i18next.min.js"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d'
+            },
+            secondary: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f'
+            }
+          },
+          fontFamily: {
+            'sans': ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22c55e;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #15803d;
+    }
+    /* Smooth transitions */
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    .hover-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    }
+    /* Gradient background for header */
+    .gradient-header {
+      background: linear-gradient(90deg, #15803d 0%, #16a34a 100%);
+    }
+    /* Sidebar Navigation Active Link */
+    .nav-link.active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+    /* Language select custom styling */
+    .lang-selector-container {
+      position: relative;
+      display: inline-block;
+    }
+    .lang-selector-container i.fa-globe {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #22c55e;
+    }
+    .lang-selector-container select {
+      padding-left: 2.5rem;
+    }
+  </style>
+</head>
+<body class="bg-primary-50 min-h-screen flex">
+  <!-- Mobile Navigation Toggle -->
+  <button id="mobileMenuToggle" class="fixed top-4 left-4 z-50 rounded-full p-2 bg-primary-600 text-white md:hidden">
+    <i class="fas fa-bars"></i>
+  </button>
+  
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="flex flex-col bg-white shadow-xl w-64 min-h-screen p-5 fixed left-0 top-0 z-40 transition-transform duration-300 ease-in-out md:translate-x-0 -translate-x-full rounded-r-lg">
+    <div class="flex-1">
+      <div class="mb-8 text-center">
+        <div class="w-20 h-20 mx-auto rounded-full bg-primary-100 overflow-hidden flex items-center justify-center">
+          <img src="images/logo.svg" alt="Cocolytics AI Logo" class="w-20 h-20 object-contain" />
+        </div>
+        <h2 class="text-2xl font-bold text-primary-800 mt-3">Cocolytics AI</h2>
+        <p class="text-sm text-gray-500">Coconut Price Intelligence</p>
+      </div>
+      <ul class="mt-8 space-y-1">
+        <li>
+          <a href="dashboard.html" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-i18n="dashboard">
+            <i class="fas fa-tachometer-alt mr-3"></i>
+            <span data-i18n="dashboard">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <!-- Mark Historical Data as active -->
+          <a href="historical_data.html" class="nav-link flex items-center p-3 rounded-lg bg-primary-100 text-primary-800 transition-all" data-i18n="historical">
+            <i class="fas fa-history mr-3"></i>
+            <span data-i18n="historical">Historical Data</span>
+          </a>
+        </li>
+        <li>
+          <a href="forecast_viewer.html" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-i18n="forecastNav">
+            <i class="fas fa-chart-line mr-3"></i>
+            <span data-i18n="forecastNav">Forecast Viewer</span>
+          </a>
+        </li>
+        <li>
+          <a href="model_comparison.html" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-i18n="comparisonNav">
+            <i class="fas fa-balance-scale mr-3"></i>
+            <span data-i18n="comparisonNav">Model Comparison</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- Sidebar Footer -->
+    <div class="pt-4 border-t border-gray-200">
+      <p class="text-xs text-gray-500 text-center">© 2025 Cocolytics AI</p>
+    </div>
+  </nav>
+  
+  <!-- Main Content Area -->
+  <div class="flex-1 md:ml-64 flex flex-col">
+    <!-- Header -->
+    <header class="gradient-header p-4 sticky top-0 z-30 shadow-md flex justify-between items-center text-white rounded-b-lg">
+      <div class="flex items-center space-x-4">
+        <h1 class="text-xl font-bold flex items-center" data-i18n="toolName">
+          <i class="fas fa-leaf mr-2"></i> Cocolytics AI
+        </h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <div class="lang-selector-container">
+          <i class="fas fa-globe"></i>
+          <select id="languageSelector" class="py-2 pr-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white text-primary-800">
+            <option value="en">English</option>
+            <option value="si">සිංහල</option>
+            <option value="ta">தமிழ்</option>
+          </select>
+        </div>
+        <div class="relative">
+          <button id="userDropdown" class="flex items-center space-x-2 focus:outline-none">
+            <div class="w-8 h-8 rounded-full bg-primary-800 flex items-center justify-center text-xs font-bold">AD</div>
+            <span class="hidden md:inline-block">Admin</span>
+            <i class="fas fa-chevron-down text-xs"></i>
+          </button>
+          <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden">
+            <a href="profile.html" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+              <i class="fas fa-user mr-2"></i> <span data-i18n="profile">Profile</span>
+            </a>
+            <a href="settings.html" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+              <i class="fas fa-cog mr-2"></i> <span data-i18n="settings">Settings</span>
+            </a>
+            <div class="border-t border-gray-200 my-1"></div>
+            <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+              <i class="fas fa-sign-out-alt mr-2"></i> <span data-i18n="logout">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+    
+    <!-- Page Content: Historical Data -->
+    <main class="p-6 flex-1 overflow-auto">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4" data-i18n="historicalTitle">Historical Data Analysis</h2>
+      
+      <!-- Export CSV -->
+      <div class="mb-4">
+        <a href="data/Final_Coconut_Dataset.csv" download class="py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+          <i class="fas fa-download mr-2"></i> <span data-i18n="exportCSV">Export Data as CSV</span>
+        </a>
+      </div>
+      
+      <!-- Chart Section -->
+      <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+        <canvas id="historicalChart"></canvas>
+      </div>
+      
+      <!-- Data Table Preview with Scroll -->
+      <div class="bg-white rounded-xl shadow-md p-5 overflow-auto" style="max-height: 400px;">
+        <h3 class="text-xl font-bold text-gray-800 mb-2" data-i18n="dataPreview">Data Preview</h3>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Date</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Retail Price (LKR)</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Kurunegala Price (LKR)</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Puttalam Price (LKR)</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Gampaha Price (LKR)</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Exchange Rate (USD/LKR)</th>
+              <th class="px-4 py-2 text-left text-sm font-bold text-gray-600">Fuel Price (LAD)</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-gray-100">
+            <!-- Data rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 p-4 text-center text-gray-500 text-sm mt-auto">
+      <p>© 2025 Cocolytics AI | Powered by TFT Forecasting Technology</p>
+      <p class="mt-1">
+        <a href="terms.html" class="text-primary-600 hover:text-primary-800 mx-2">Terms</a> |
+        <a href="privacy.html" class="text-primary-600 hover:text-primary-800 mx-2">Privacy</a> |
+        <a href="support.html" class="text-primary-600 hover:text-primary-800 mx-2">Support</a>
+      </p>
+    </footer>
+  </div>
+  
+  <!-- JavaScript Section -->
+  <script>
+    // Mobile Navigation Toggle
+    document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    });
+    
+    // User Dropdown Toggle
+    document.getElementById('userDropdown').addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.getElementById('userMenu').classList.toggle('hidden');
+    });
+    document.addEventListener('click', function(event) {
+      const userDropdown = document.getElementById('userDropdown');
+      const userMenu = document.getElementById('userMenu');
+      if (!userDropdown.contains(event.target) && !userMenu.contains(event.target)) {
+        userMenu.classList.add('hidden');
+      }
+    });
+    
+    // i18next initialization for Historical Data page
+    i18next.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "Dashboard",
+            "historical": "Historical Data",
+            "forecastNav": "Forecast Viewer",
+            "comparisonNav": "Model Comparison",
+            "exportCSV": "Export Data as CSV",
+            "historicalTitle": "Historical Data Analysis",
+            "dataPreview": "Data Preview",
+            "profile": "Profile",
+            "settings": "Settings",
+            "logout": "Logout"
+          }
+        },
+        si: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "Dashboard උපකරණ පුවරුව",
+            "historical": "ඉතිහාස දත්ත",
+            "forecastNav": "පූර්වකථන දර්ශකය",
+            "comparisonNav": "ආදර්ශ සසඳීම",
+            "exportCSV": "දත්ත CSV ලෙස බාගන්න",
+            "historicalTitle": "ඉතිහාස දත්ත විශ්ලේෂණය",
+            "dataPreview": "දත්ත පෙරදසුන",
+            "profile": "පැතිකඩ",
+            "settings": "සැකසුම්",
+            "logout": "ප්‍රस्थानය"
+          }
+        },
+        ta: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "டாஷ்போர்டு",
+            "historical": "வரலாற்று தரவுகள்",
+            "forecastNav": "முன்னறிவிப்பு காட்சியாளர்",
+            "comparisonNav": "மாதிரி ஒப்பீடு",
+            "exportCSV": "தரவை CSV-ஆக பதிவிறக்கம் செய்க",
+            "historicalTitle": "வரலாற்று தரவு பகுப்பு",
+            "dataPreview": "தரவு முன்னோட்டம்",
+            "profile": "சுயசரணம்",
+            "settings": "அமைப்புகள்",
+            "logout": "வெளியேறு"
+          }
+        }
+      }
+    }, function(err, t) {
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        el.innerText = i18next.t(el.getAttribute('data-i18n'));
+      });
+      updateCurrentMonth();
+    });
+    
+    document.getElementById('languageSelector').addEventListener('change', function() {
+      const newLang = this.value;
+      i18next.changeLanguage(newLang, function() {
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          el.innerText = i18next.t(el.getAttribute('data-i18n'));
+        });
+        updateCurrentMonth();
+      });
+    });
+    
+    // Function to update current month display
+    function updateCurrentMonth() {
+      const now = new Date();
+      let monthName, year = now.getFullYear();
+      if (i18next.language === 'si') {
+        const monthNames_si = ["ජනවාරි", "පෙබරවාරි", "මාර්තු", "අප්රේල්", "මැයි", "ජූනි", "ජූලි", "අගෝස්තු", "සැප්තැම්බර්", "ඔක්තෝබර්", "නොවැම්බර්", "දෙසැම්බර්"];
+        monthName = monthNames_si[now.getMonth()];
+      } else if (i18next.language === 'ta') {
+        const monthNames_ta = ["ஜனவரி", "பிப்ரவரி", "மார்ச்", "ஏப்ரல்", "மே", "ஜூன்", "ஜூலை", "ஆகஸ்ட்", "செப்டம்பர்", "அக்டோபர்", "நவம்பர்", "டிசம்பர்"];
+        monthName = monthNames_ta[now.getMonth()];
+      } else {
+        monthName = now.toLocaleDateString('en-US', { month: 'long' });
+      }
+      const currentMonthDisplay = document.getElementById('currentMonthDisplay');
+      if (currentMonthDisplay) {
+        currentMonthDisplay.textContent = monthName + " " + year;
+      }
+    }
+    updateCurrentMonth();
+    
+    // Fetch historical data from the local endpoint and populate table & chart
+    fetch("http://localhost:8000/historical-data")
+      .then(response => response.json())
+      .then(data => {
+        populateTable(data);
+        createChart(data);
+      })
+      .catch(error => {
+        console.error("Error fetching historical data:", error);
+      });
+    
+    // Populate table while checking for undefined/empty rows
+    function populateTable(data) {
+      const tableBody = document.getElementById("tableBody");
+      data.forEach(row => {
+        // Skip row if essential data (like date) is undefined or empty.
+        if (!row.date || row.date.trim() === "" || row.date.toLowerCase() === "undefined") return;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="px-4 py-2 text-sm text-gray-700">${row.date}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.retail_price_lkr || ""}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.kurunegala_producer_price_lkr || ""}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.puttalam_producer_price_lkr || ""}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.gampaha_producer_price_lkr || ""}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.exchange_rate_usd_to_lkr || ""}</td>
+          <td class="px-4 py-2 text-sm text-gray-700">${row.fuel_price_lad || ""}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+    
+    // Create Chart.js line chart for historical retail price trends
+    function createChart(data) {
+      const labels = data.map(row => row.date).filter(label => label && label.trim() !== "" && label.toLowerCase() !== "undefined");
+      const retailPrices = data.map(row => parseFloat(row.retail_price_lkr)).filter(price => !isNaN(price));
+      
+      const ctx = document.getElementById('historicalChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Retail Price (LKR)',
+            data: retailPrices,
+            borderColor: 'rgba(22, 163, 74, 1)',
+            backgroundColor: 'rgba(22, 163, 74, 0.2)',
+            tension: 0.1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Historical Retail Price Trends' }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Date' } },
+            y: { title: { display: true, text: 'Retail Price (LKR)' } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

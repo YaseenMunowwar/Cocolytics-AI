@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Forecast Debug with Persistence</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background: #f4f4f4;
+    }
+    button {
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    pre {
+      background: #fff;
+      padding: 1em;
+      border-radius: 5px;
+      margin-top: 1em;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Forecast Debug Tool (with Save)</h1>
+  <button id="fetchBtn" type="button">Fetch Forecast</button>
+  <pre id="output">Click the button to fetch forecast data...</pre>
+
+  <script>
+    const output = document.getElementById("output");
+
+    // 🟢 Load from localStorage on page load
+    const savedForecast = localStorage.getItem("lastForecast");
+    if (savedForecast) {
+      try {
+        const parsed = JSON.parse(savedForecast);
+        output.textContent = formatForecast(parsed);
+      } catch (e) {
+        console.warn("Could not parse saved forecast:", e);
+      }
+    }
+
+    // 🔘 Fetch button logic
+    document.getElementById("fetchBtn").addEventListener("click", function () {
+      output.textContent = "Fetching from backend...";
+
+      fetch("http://localhost:8000/forecast")
+        .then(res => res.json())
+        .then(data => {
+          const result = formatForecast(data);
+          output.textContent = result;
+
+          // 💾 Save to localStorage
+          localStorage.setItem("lastForecast", JSON.stringify(data));
+        })
+        .catch(err => {
+          output.textContent = "❌ Fetch failed:\n" + err.message;
+        });
+    });
+
+    // 🔤 Formatting function
+    function formatForecast(data) {
+      let result = `✅ ${data.message}\n\n📈 Forecast:\n`;
+      for (let [date, value] of Object.entries(data.forecast)) {
+        result += `- ${date}: ${value}\n`;
+      }
+      return result;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cocolytics AI - Coconut Price Forecasting</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- i18next for multi-language support -->
+  <script src="https://unpkg.com/i18next@21.6.3/dist/umd/i18next.min.js"></script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            secondary: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+          },
+          fontFamily: {
+            'sans': ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #22c55e;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #15803d;
+    }
+    /* Smooth transitions */
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    /* Card hover effects */
+    .hover-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    /* Gradient background for header */
+    .gradient-header {
+      background: linear-gradient(90deg, #15803d 0%, #16a34a 100%);
+    }
+    /* Dashboard card gradients */
+    .card-gradient-1 {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+    }
+    .card-gradient-2 {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    }
+    .card-gradient-3 {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    }
+    /* Page transitions */
+    .page {
+      transition: opacity 0.3s ease;
+    }
+    .page.hidden {
+      display: none;
+      opacity: 0;
+    }
+    .page:not(.hidden) {
+      opacity: 1;
+    }
+    /* Custom range input styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 8px;
+      border-radius: 5px;
+      background: #e2e8f0;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #22c55e;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #15803d;
+    }
+  </style>
+</head>
+
+<body class="bg-primary-50 min-h-screen flex">
+  <!-- Mobile Navigation Toggle Button (visible on small screens) -->
+  <button id="mobileMenuToggle" class="fixed top-4 left-4 z-50 rounded-full p-2 bg-primary-600 text-white md:hidden">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="bg-white shadow-xl w-64 min-h-screen p-5 fixed left-0 top-0 z-40 transform transition-transform duration-300 ease-in-out md:translate-x-0 -translate-x-full rounded-r-lg">
+    <div class="mb-8 text-center">
+      <!-- Logo & Branding (Replace image src with your logo URL) -->
+      <div class="p-3 rounded-full bg-primary-100 inline-block">
+        <img src="/api/placeholder/100/100" alt="Cocolytics AI Logo" class="w-16 h-16 mx-auto rounded-full" />
+      </div>
+      <h2 class="text-center text-2xl font-bold text-primary-800 mt-3">Cocolytics AI</h2>
+      <p class="text-sm text-gray-500">Coconut Price Intelligence</p>
+    </div>
+    
+    <ul class="mt-8 space-y-1">
+      <li>
+        <a href="#" class="nav-link flex items-center p-3 rounded-lg text-primary-800 hover:bg-primary-100 transition-all" data-page="dashboard" data-i18n="dashboard">Dashboard</a>
+      </li>
+      <li>
+        <a href="#" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-page="historical" data-i18n="historical">Historical Data</a>
+      </li>
+      <li>
+        <a href="#" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-page="forecast" data-i18n="forecastNav">Forecast Viewer</a>
+      </li>
+      <li>
+        <a href="#" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-page="comparison" data-i18n="comparisonNav">Model Comparison</a>
+      </li>
+      <li>
+        <a href="#" class="nav-link flex items-center p-3 rounded-lg text-gray-600 hover:bg-primary-100 transition-all" data-page="downloads" data-i18n="downloadsNav">Downloads</a>
+      </li>
+    </ul>
+    
+    <!-- Language Selector in Sidebar -->
+    <div class="mt-12 px-3">
+      <label class="block text-sm font-medium text-gray-600 mb-2" data-i18n="language">Language</label>
+      <div class="relative">
+        <select id="languageSelector" class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 appearance-none">
+          <option value="en">English</option>
+          <option value="si">සිංහල</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <i class="fas fa-chevron-down text-xs"></i>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="mt-12 pt-4 border-t border-gray-200">
+      <p class="text-xs text-gray-500 text-center">© 2025 Cocolytics AI</p>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 md:ml-64 flex flex-col">
+    <!-- Header -->
+    <header class="gradient-header p-4 sticky top-0 z-30 shadow-md flex justify-between items-center text-white rounded-b-lg">
+      <h1 class="text-xl font-bold flex items-center" data-i18n="toolName">
+        <i class="fas fa-leaf mr-2"></i> Cocolytics AI
+      </h1>
+      <!-- User info & settings dropdown -->
+      <div class="relative">
+        <button id="userDropdown" class="flex items-center space-x-2 focus:outline-none">
+          <div class="w-8 h-8 rounded-full bg-primary-800 flex items-center justify-center text-xs font-bold">
+            AD
+          </div>
+          <span class="hidden md:inline-block">Admin</span>
+          <i class="fas fa-chevron-down text-xs"></i>
+        </button>
+        <!-- Dropdown menu (hidden by default) -->
+        <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden">
+          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+            <i class="fas fa-user mr-2"></i> Profile
+          </a>
+          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+            <i class="fas fa-cog mr-2"></i> Settings
+          </a>
+          <div class="border-t border-gray-200 my-1"></div>
+          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Pages Container -->
+    <main class="p-6 flex-1 overflow-auto">
+      <!-- Dashboard / Landing Page -->
+      <section id="dashboard" class="page">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800" data-i18n="welcomeDashboard">Welcome to Cocolytics AI</h2>
+          <div class="text-right">
+            <span class="text-sm text-gray-500" data-i18n="currentDate">Current Date</span>
+            <p class="text-lg font-medium text-gray-800" id="currentDate"></p>
+          </div>
+        </div>
+        
+        <p class="mb-6 text-gray-600" data-i18n="dashboardIntro">
+          Your one-stop solution for coconut price forecasting in Sri Lanka.
+        </p>
+        
+        <!-- Main Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div class="card-gradient-1 rounded-xl shadow-md p-5 hover-card">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-semibold text-primary-800" data-i18n="bestModel">Best Model</h3>
+                <p class="text-3xl font-bold text-primary-900">TFT</p>
+              </div>
+              <div class="p-3 bg-white/50 rounded-full">
+                <i class="fas fa-award text-2xl text-primary-600"></i>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center">
+                <span class="text-sm text-gray-600" data-i18n="accuracy">Accuracy</span>
+                <span class="ml-auto text-sm font-medium text-primary-700">96.8%</span>
+              </div>
+              <div class="w-full h-2 bg-white/50 rounded-full mt-1">
+                <div class="h-2 bg-primary-500 rounded-full" style="width: 96.8%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-gradient-2 rounded-xl shadow-md p-5 hover-card">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-semibold text-secondary-800" data-i18n="currentTrend">Current Trend</h3>
+                <p class="text-3xl font-bold text-secondary-900">
+                  <i class="fas fa-arrow-up text-xl"></i> Rising
+                </p>
+              </div>
+              <div class="p-3 bg-white/50 rounded-full">
+                <i class="fas fa-chart-line text-2xl text-secondary-600"></i>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center">
+                <span class="text-sm text-gray-600" data-i18n="monthlyChange">Monthly Change</span>
+                <span class="ml-auto text-sm font-medium text-secondary-700">+4.8%</span>
+              </div>
+              <div class="w-full h-2 bg-white/50 rounded-full mt-1">
+                <div class="h-2 bg-secondary-500 rounded-full" style="width: 74%"></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-gradient-3 rounded-xl shadow-md p-5 hover-card">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-semibold text-blue-800" data-i18n="currentPrice">Current Price</h3>
+                <p class="text-3xl font-bold text-blue-900">₨ 93.82</p>
+              </div>
+              <div class="p-3 bg-white/50 rounded-full">
+                <i class="fas fa-coins text-2xl text-blue-600"></i>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center">
+                <span class="text-sm text-gray-600" data-i18n="predictedNext">Next Month</span>
+                <span class="ml-auto text-sm font-medium text-blue-700">₨ 95.41</span>
+              </div>
+              <div class="w-full h-2 bg-white/50 rounded-full mt-1">
+                <div class="h-2 bg-blue-500 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Main Chart Area -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-8">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-gray-800" data-i18n="priceOverview">Price Overview</h3>
+            <div class="flex space-x-2">
+              <button class="time-filter px-3 py-1 rounded-full text-sm bg-primary-500 text-white">1Y</button>
+              <button class="time-filter px-3 py-1 rounded-full text-sm text-gray-600">6M</button>
+              <button class="time-filter px-3 py-1 rounded-full text-sm text-gray-600">3M</button>
+              <button class="time-filter px-3 py-1 rounded-full text-sm text-gray-600">1M</button>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas id="mainChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Insights & Forecast Preview -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow-md p-5">
+            <h3 class="font-bold text-gray-800 mb-4" data-i18n="keyInsights">Key Insights</h3>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <div class="mt-1 mr-3 flex-shrink-0 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-check text-xs text-white"></i>
+                </div>
+                <p class="text-gray-600">Prices are expected to rise by 3.5% in the next quarter due to seasonal demand.</p>
+              </li>
+              <li class="flex items-start">
+                <div class="mt-1 mr-3 flex-shrink-0 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-bolt text-xs text-white"></i>
+                </div>
+                <p class="text-gray-600">Recent fuel price changes might impact transport costs, affecting the coconut supply chain.</p>
+              </li>
+              <li class="flex items-start">
+                <div class="mt-1 mr-3 flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-info text-xs text-white"></i>
+                </div>
+                <p class="text-gray-600">Export regulations are stable, maintaining consistent international market pricing.</p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5">
+            <h3 class="font-bold text-gray-800 mb-4" data-i18n="nextForecast">Next 12 Months Forecast</h3>
+            <div class="flex items-center mb-4">
+              <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-calendar-alt text-2xl text-primary-600"></i>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500" data-i18n="peakMonth">Peak Month</p>
+                <p class="text-lg font-semibold text-gray-800">December 2025</p>
+                <p class="text-sm text-gray-600">Est. Price: ₨ 97.50</p>
+              </div>
+            </div>
+            <a href="#" class="view-forecast block text-center py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors" data-page="forecast" data-i18n="viewDetailedForecast">
+              View Detailed Forecast
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Model Comparison Page -->
+      <section id="comparison" class="page hidden">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-800" data-i18n="modelComparison">Model Comparison</h2>
+          <p class="text-gray-600" data-i18n="comparisonDesc">Compare performance metrics across different forecasting models.</p>
+        </div>
+        
+        <!-- Model Performance Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-xl shadow-md p-5 border-l-4 border-primary-500 hover-card">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-bold text-primary-800">TFT</h3>
+              <div class="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full">
+                Best
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">Temporal Fusion Transformer</p>
+            <div class="space-y-2">
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAE:</span>
+                  <span class="font-medium">2.92</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-primary-500 rounded-full" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>RMSE:</span>
+                  <span class="font-medium">3.35</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-primary-500 rounded-full" style="width: 92%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAPE:</span>
+                  <span class="font-medium">3.37%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-primary-500 rounded-full" style="width: 94%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 border-l-4 border-blue-500 hover-card">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-bold text-blue-800">SARIMAX</h3>
+              <div class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                Runner-up
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">Seasonal ARIMA with Exogenous Variables</p>
+            <div class="space-y-2">
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAE:</span>
+                  <span class="font-medium">4.80</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-blue-500 rounded-full" style="width: 84%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>RMSE:</span>
+                  <span class="font-medium">5.01</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-blue-500 rounded-full" style="width: 80%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAPE:</span>
+                  <span class="font-medium">5.52%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-blue-500 rounded-full" style="width: 78%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 border-l-4 border-yellow-500 hover-card">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-bold text-yellow-800">Prophet</h3>
+              <div class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">
+                Third
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">Facebook Prophet Model</p>
+            <div class="space-y-2">
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAE:</span>
+                  <span class="font-medium">6.42</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-yellow-500 rounded-full" style="width: 72%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>RMSE:</span>
+                  <span class="font-medium">7.18</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-yellow-500 rounded-full" style="width: 68%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAPE:</span>
+                  <span class="font-medium">7.35%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-yellow-500 rounded-full" style="width: 65%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 border-l-4 border-gray-500 hover-card">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-bold text-gray-800">LSTM</h3>
+              <div class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                Fourth
+              </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">Long Short-Term Memory Network</p>
+            <div class="space-y-2">
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAE:</span>
+                  <span class="font-medium">8.15</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-gray-500 rounded-full" style="width: 60%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>RMSE:</span>
+                  <span class="font-medium">9.04</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-gray-500 rounded-full" style="width: 55%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm">
+                  <span>MAPE:</span>
+                  <span class="font-medium">9.21%</span>
+                </div>
+                <div class="w-full h-2 bg-gray-100 rounded-full">
+                  <div class="h-2 bg-gray-500 rounded-full" style="width: 52%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Performance Comparison Chart -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+          <h3 class="font-bold text-gray-800 mb-4" data-i18n="performanceComparison">Performance Comparison</h3>
+          <div class="h-80">
+            <canvas id="comparisonChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Feature Importance -->
+        <div class="bg-white rounded-xl shadow-md p-5">
+          <h3 class="font-bold text-gray-800 mb-4" data-i18n="featureImportance">Feature Importance</h3>
+          <p class="text-gray-600 mb-4" data-i18n="importanceDesc">Impact of different factors on TFT model predictions.</p>
+          <div class="space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium">Fuel Price</span>
+                <span class="text-sm">42%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-100 rounded-full">
+                <div class="h-3 bg-primary-500 rounded-full" style="width: 42%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium">Exchange Rate</span>
+                <span class="text-sm">38%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-100 rounded-full">
+                <div class="h-3 bg-primary-500 rounded-full" style="width: 38%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium">Seasonal Factors</span>
+                <span class="text-sm">32%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-100 rounded-full">
+                <div class="h-3 bg-primary-500 rounded-full" style="width: 32%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium">Rainfall</span>
+                <span class="text-sm">28%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-100 rounded-full">
+                <div class="h-3 bg-primary-500 rounded-full" style="width: 28%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium">Previous Month Price</span>
+                <span class="text-sm">25%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-100 rounded-full">
+                <div class="h-3 bg-primary-500 rounded-full" style="width: 25%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium">Fertilizer Price</span>
+                <span class="text-sm">18%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-100 rounded-full">
+                <div class="h-3 bg-primary-500 rounded-full" style="width: 18%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Downloads Page -->
+      <section id="downloads" class="page hidden">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-800" data-i18n="downloadForecast">Download Center</h2>
+          <p class="text-gray-600" data-i18n="downloadDesc">Access and export data, reports, and visuals.</p>
+        </div>
+        <!-- Download Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white rounded-xl shadow-md p-5 hover-card">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-file-csv text-xl text-primary-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800" data-i18n="rawData">Raw Data</h3>
+                <p class="text-sm text-gray-500">CSV, Excel</p>
+              </div>
+            </div>
+            <ul class="space-y-2 mb-4">
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-primary-600 mr-2"></i>
+                <span data-i18n="historicalPrices">Historical Prices (2018-2025)</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-primary-600 mr-2"></i>
+                <span data-i18n="forecastData">Forecast Data (12 months)</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-primary-600 mr-2"></i>
+                <span data-i18n="auxVariables">Auxiliary Variables</span>
+              </li>
+            </ul>
+            <button class="w-full py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center">
+              <i class="fas fa-download mr-2"></i>
+              <span data-i18n="downloadData">Download Data</span>
+            </button>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 hover-card">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-file-pdf text-xl text-blue-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800" data-i18n="reports">Reports</h3>
+                <p class="text-sm text-gray-500">PDF, Word</p>
+              </div>
+            </div>
+            <ul class="space-y-2 mb-4">
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-blue-600 mr-2"></i>
+                <span data-i18n="monthlyReport">Monthly Market Report</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-blue-600 mr-2"></i>
+                <span data-i18n="quarterlyForecast">Quarterly Forecast Analysis</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-blue-600 mr-2"></i>
+                <span data-i18n="modelMethodology">Model Methodology</span>
+              </li>
+            </ul>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+              <i class="fas fa-download mr-2"></i>
+              <span data-i18n="downloadReports">Download Reports</span>
+            </button>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 hover-card">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+                <i class="fas fa-file-image text-xl text-purple-600"></i>
+              </div>
+              <div>
+                <h3 class="font-bold text-gray-800" data-i18n="visuals">Visuals</h3>
+                <p class="text-sm text-gray-500">PNG, SVG, JPEG</p>
+              </div>
+            </div>
+            <ul class="space-y-2 mb-4">
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-purple-600 mr-2"></i>
+                <span data-i18n="charts">Interactive Charts</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-purple-600 mr-2"></i>
+                <span data-i18n="infographics">Infographics</span>
+              </li>
+              <li class="flex items-center text-sm text-gray-600">
+                <i class="fas fa-check text-purple-600 mr-2"></i>
+                <span data-i18n="presentations">Presentation Slides</span>
+              </li>
+            </ul>
+            <button class="w-full py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center">
+              <i class="fas fa-download mr-2"></i>
+              <span data-i18n="downloadVisuals">Download Visuals</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Custom Export Tool -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+          <h3 class="font-bold text-gray-800 mb-4" data-i18n="customExport">Custom Export Tool</h3>
+          <p class="text-gray-600 mb-4" data-i18n="customExportDesc">Create personalized data extracts and reports.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-2" data-i18n="dataType">Data Type</label>
+              <select class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                <option value="historical">Historical Data</option>
+                <option value="forecast">Forecast Data</option>
+                <option value="combined">Combined Dataset</option>
+                <option value="report">Analytical Report</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-2" data-i18n="dateRange">Date Range</label>
+              <select class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                <option value="1m">Last Month</option>
+                <option value="3m">Last 3 Months</option>
+                <option value="6m">Last 6 Months</option>
+                <option value="1y">Last Year</option>
+                <option value="5y">Last 5 Years</option>
+                <option value="custom">Custom Range</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-2" data-i18n="fileFormat">File Format</label>
+              <select class="w-full p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                <option value="csv">CSV</option>
+                <option value="excel">Excel</option>
+                <option value="pdf">PDF</option>
+                <option value="json">JSON</option>
+                <option value="image">PNG Image</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex items-center mb-4">
+            <input type="checkbox" id="includeAnalysis" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500" />
+            <label for="includeAnalysis" class="ml-2 block text-sm text-gray-600" data-i18n="includeAnalysis">Include analysis and insights</label>
+          </div>
+          <button class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center">
+            <i class="fas fa-file-export mr-2"></i>
+            <span data-i18n="generateExport">Generate Custom Export</span>
+          </button>
+        </div>
+        
+        <!-- Recent Downloads -->
+        <div class="bg-white rounded-xl shadow-md p-5">
+          <h3 class="font-bold text-gray-800 mb-4" data-i18n="recentDownloads">Recent Downloads</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
+                  <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                  <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                  <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">April_2025_Forecast.csv</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">CSV</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Apr 05, 2025</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">64 KB</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <button class="text-primary-600 hover:text-primary-800">
+                      <i class="fas fa-download"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Q1_2025_Market_Report.pdf</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">PDF</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Mar 28, 2025</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.4 MB</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <button class="text-primary-600 hover:text-primary-800">
+                      <i class="fas fa-download"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Coconut_Price_Chart_2024.png</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">PNG</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Mar 15, 2025</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">842 KB</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <button class="text-primary-600 hover:text-primary-800">
+                      <i class="fas fa-download"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forecast Viewer Page -->
+      <section id="forecast" class="page hidden">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-800" data-i18n="forecastViewer">Forecast Viewer</h2>
+          <p class="text-gray-600" data-i18n="forecastDesc">View and simulate future coconut price projections.</p>
+        </div>
+        
+        <!-- Forecast Chart -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-gray-800" data-i18n="forecastChart">Forecast Chart</h3>
+            <div class="flex space-x-2">
+              <button class="forecast-period px-3 py-1 rounded-full text-sm bg-primary-500 text-white">1Y</button>
+              <button class="forecast-period px-3 py-1 rounded-full text-sm text-gray-600">6M</button>
+              <button class="forecast-period px-3 py-1 rounded-full text-sm text-gray-600">3M</button>
+            </div>
+          </div>
+          <div class="h-80">
+            <canvas id="forecastChart"></canvas>
+          </div>
+        </div>
+        
+        <!-- Simulation Options -->
+        <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+          <h3 class="font-bold text-gray-800 mb-4" data-i18n="simulationOptions">Simulation Options</h3>
+          <p class="text-gray-600 mb-4" data-i18n="simulationDesc">Adjust parameters to see how different factors affect coconut prices.</p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="fuelPrice" class="block text-sm font-medium text-gray-600 mb-2">
+                <i class="fas fa-gas-pump mr-1"></i>
+                <span data-i18n="fuelPrice">Fuel Price (LKR)</span>
+                <span class="text-primary-600 ml-2" id="fuelPriceValue">104</span>
+              </label>
+              <input type="range" id="fuelPrice" min="10" max="500" value="104" class="w-full" />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>10</span>
+                <span>250</span>
+                <span>500</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="exchangeRate" class="block text-sm font-medium text-gray-600 mb-2">
+                <i class="fas fa-exchange-alt mr-1"></i>
+                <span data-i18n="exchangeRate">Exchange Rate (LKR/USD)</span>
+                <span class="text-primary-600 ml-2" id="exchangeRateValue">200</span>
+              </label>
+              <input type="range" id="exchangeRate" min="50" max="400" value="200" class="w-full" />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>50</span>
+                <span>225</span>
+                <span>400</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="rainfall" class="block text-sm font-medium text-gray-600 mb-2">
+                <i class="fas fa-cloud-rain mr-1"></i>
+                <span data-i18n="rainfall">Rainfall (mm/month)</span>
+                <span class="text-primary-600 ml-2" id="rainfallValue">250</span>
+              </label>
+              <input type="range" id="rainfall" min="50" max="500" value="250" class="w-full" />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>50</span>
+                <span>275</span>
+                <span>500</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="fertilizer" class="block text-sm font-medium text-gray-600 mb-2">
+                <i class="fas fa-seedling mr-1"></i>
+                <span data-i18n="fertilizer">Fertilizer Price (LKR/kg)</span>
+                <span class="text-primary-600 ml-2" id="fertilizerValue">120</span>
+              </label>
+              <input type="range" id="fertilizer" min="50" max="300" value="120" class="w-full" />
+              <div class="flex justify-between text-xs text-gray-500 mt-1">
+                <span>50</span>
+                <span>175</span>
+                <span>300</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 flex justify-center">
+            <button id="simulateForecast" class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center">
+              <i class="fas fa-play mr-2"></i>
+              <span data-i18n="simulate">Run Simulation</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Simulation Results -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white rounded-xl shadow-md p-5 hover-card">
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-calculator text-primary-600"></i>
+              </div>
+              <h3 class="font-bold text-gray-800" data-i18n="predictedPrice">Predicted Price</h3>
+            </div>
+            <div class="text-center">
+              <p class="text-4xl font-bold text-primary-700" id="predictedPrice">₨ 95.73</p>
+              <p class="text-sm text-gray-500" data-i18n="nextMonthAvg">Next Month Average</p>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 hover-card">
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-chart-line text-blue-600"></i>
+              </div>
+              <h3 class="font-bold text-gray-800" data-i18n="priceChange">Price Change</h3>
+            </div>
+            <div class="text-center">
+              <p class="text-4xl font-bold text-green-600" id="priceChange">+2.04%</p>
+              <p class="text-sm text-gray-500" data-i18n="fromCurrentPrice">From Current Price</p>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-md p-5 hover-card">
+            <div class="flex items-center mb-3">
+              <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+              </div>
+              <h3 class="font-bold text-gray-800" data-i18n="priceVolatility">Price Volatility</h3>
+            </div>
+            <div class="text-center">
+              <p class="text-4xl font-bold text-yellow-600" id="priceVolatility">Medium</p>
+              <p class="text-sm text-gray-500" data-i18n="confidenceLevel">85% Confidence Level</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Download Section -->
+        <div class="bg-white rounded-xl shadow-md p-5">
+          <h3 class="font-bold text-gray-800 mb-4" data-i18n="exportForecast">Export Forecast</h3>
+          <div class="flex flex-wrap gap-3">
+            <button id="downloadForecastCSV" class="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+              <i class="fas fa-file-csv mr-2"></i>
+              <span data-i18n="downloadCSV">Download CSV</span>
+            </button>
+            <button id="downloadForecastExcel" class="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+              <i class="fas fa-file-excel mr-2"></i>
+              <span data-i18n="downloadExcel">Download Excel</span>
+            </button>
+            <button id="downloadForecastImage" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <i class="fas fa-file-image mr-2"></i>
+              <span data-i18n="downloadImage">Download Chart Image</span>
+            </button>
+            <button id="shareForecast" class="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+              <i class="fas fa-share-alt mr-2"></i>
+              <span data-i18n="shareForecast">Share Forecast</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 p-4 text-center text-gray-500 text-sm mt-auto">
+      <p>© 2025 Cocolytics AI | Powered by TFT Forecasting Technology</p>
+      <p class="mt-1">
+        <a href="#" class="text-primary-600 hover:text-primary-800 mx-2">Terms</a> |
+        <a href="#" class="text-primary-600 hover:text-primary-800 mx-2">Privacy</a> |
+        <a href="#" class="text-primary-600 hover:text-primary-800 mx-2">Support</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- JavaScript Section -->
+  <script>
+    // Mobile Navigation Toggle
+    document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('-translate-x-full');
+    });
+    
+    // User dropdown toggle
+    document.getElementById('userDropdown').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const userMenu = document.getElementById('userMenu');
+      userMenu.classList.toggle('hidden');
+    });
+    
+    // Close user dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const userDropdown = document.getElementById('userDropdown');
+      const userMenu = document.getElementById('userMenu');
+      if (!userDropdown.contains(event.target) && !userMenu.contains(event.target)) {
+        userMenu.classList.add('hidden');
+      }
+    });
+    
+    // Multi-page navigation logic
+    const pages = document.querySelectorAll('.page');
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Remove active state from all links
+        navLinks.forEach(l => {
+          l.classList.remove('bg-primary-100', 'text-primary-800');
+          l.classList.add('text-gray-600');
+        });
+        // Add active state to clicked link
+        this.classList.remove('text-gray-600');
+        this.classList.add('bg-primary-100', 'text-primary-800');
+        // Hide all pages and then show the selected page
+        pages.forEach(page => page.classList.add('hidden'));
+        const targetPage = document.getElementById(this.getAttribute('data-page'));
+        if (targetPage) targetPage.classList.remove('hidden');
+        // Close mobile menu after navigation on small screens
+        if (window.innerWidth < 768) {
+          document.getElementById('sidebar').classList.add('-translate-x-full');
+        }
+      });
+    });
+    
+    // View forecast button
+    document.querySelectorAll('.view-forecast').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector('.nav-link[data-page="forecast"]').click();
+      });
+    });
+    
+    // Initialize current date
+    const now = new Date();
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    
+    // Initialize Main Chart (Dashboard)
+    const mainChartCtx = document.getElementById('mainChart').getContext('2d');
+    const mainChart = new Chart(mainChartCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [
+          {
+            label: 'Retail Price (LKR)',
+            data: [86.11,89.07,91.31,93.82,91.84,86.80,82.49,79.18,78.77,79.57,84.00,88.87],
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22,163,74,0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'Producer Price (LKR)',
+            data: [80.85,82.00,82.65,82.24,81.05,77.80,75.49,73.18,73.77,74.57,78.00,82.87],
+            borderColor: '#047857',
+            backgroundColor: 'rgba(4,120,87,0.05)',
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(255,255,255,0.9)',
+            titleColor: '#1f2937',
+            bodyColor: '#4b5563',
+            borderColor: '#e5e7eb',
+            borderWidth: 1,
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true
+          }
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: {
+            grid: { borderDash: [2,4], color: '#e5e7eb' },
+            beginAtZero: false
+          }
+        }
+      }
+    });
+    
+    // Historical Chart
+    const historicalCtx = document.getElementById('historicalChart') ? document.getElementById('historicalChart').getContext('2d') : null;
+    let historicalChart;
+    if (historicalCtx) {
+      historicalChart = new Chart(historicalCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          datasets: [
+            {
+              label: 'Retail Price (LKR)',
+              data: [86.11,89.07,91.31,93.82,91.84,86.80,82.49,79.18,78.77,79.57,84.00,88.87],
+              borderColor: '#16a34a',
+              backgroundColor: 'rgba(22,163,74,0.1)',
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'Producer Price (LKR)',
+              data: [80.85,82.00,82.65,82.24,81.05,77.80,75.49,73.18,73.77,74.57,78.00,82.87],
+              borderColor: '#047857',
+              backgroundColor: 'rgba(4,120,87,0.05)',
+              tension: 0.4,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                padding: 20
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              titleColor: '#1f2937',
+              bodyColor: '#4b5563',
+              borderColor: '#e5e7eb',
+              borderWidth: 1,
+              padding: 12,
+              boxPadding: 6,
+              usePointStyle: true
+            }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { borderDash: [2,4], color: '#e5e7eb' }, beginAtZero: false }
+          }
+        }
+      });
+    }
+    
+    // Forecast Chart
+    const forecastCtx = document.getElementById('forecastChart').getContext('2d');
+    const forecastChart = new Chart(forecastCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [
+          {
+            label: 'Actual Prices',
+            data: [86.11,89.07,91.31,93.82,null,null,null,null,null,null,null,null],
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22,163,74,0.1)',
+            tension: 0.4,
+            pointRadius: 5,
+            pointBackgroundColor: '#16a34a'
+          },
+          {
+            label: 'TFT Predicted',
+            data: [83.99,86.62,88.39,88.72,91.84,93.25,94.15,95.10,96.32,97.05,96.18,95.20],
+            borderColor: '#047857',
+            backgroundColor: 'rgba(4,120,87,0.05)',
+            tension: 0.4,
+            borderDash: [5,5],
+            fill: true
+          },
+          {
+            label: 'Confidence Interval (Upper)',
+            data: [83.99,86.62,88.39,88.72,/* Upper values calculated later */],
+            borderColor: 'rgba(4,120,87,0.3)',
+            backgroundColor: 'rgba(4,120,87,0.05)',
+            tension: 0.4,
+            borderWidth: 1,
+            fill: '+1'
+          },
+          {
+            label: 'Confidence Interval (Lower)',
+            data: [83.99,86.62,88.39,88.72,/* Lower values calculated later */],
+            borderColor: 'rgba(4,120,87,0.3)',
+            backgroundColor: 'rgba(4,120,87,0.05)',
+            tension: 0.4,
+            borderWidth: 1,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              filter: function(legendItem) {
+                return legendItem.text.indexOf('Confidence') === -1;
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(255,255,255,0.9)',
+            titleColor: '#1f2937',
+            bodyColor: '#4b5563',
+            borderColor: '#e5e7eb',
+            borderWidth: 1,
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true
+          }
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { borderDash: [2,4], color: '#e5e7eb' }, beginAtZero: false }
+        }
+      }
+    });
+    
+    // Change chart type for historical chart
+    document.querySelectorAll('.chart-type').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.chart-type').forEach(b => {
+          b.classList.remove('bg-primary-500', 'text-white');
+          b.classList.add('text-gray-600');
+        });
+        this.classList.remove('text-gray-600');
+        this.classList.add('bg-primary-500', 'text-white');
+        const chartType = this.getAttribute('data-type');
+        if (historicalChart) {
+          historicalChart.config.type = chartType;
+          historicalChart.update();
+        }
+      });
+    });
+    
+    // Simulation logic for Forecast Viewer
+    document.getElementById('simulateForecast').addEventListener('click', async () => {
+      const fuelPrice = document.getElementById('fuelPrice').value;
+      const exchangeRate = document.getElementById('exchangeRate').value;
+      const rainfall = document.getElementById('rainfall').value;
+      const fertilizer = document.getElementById('fertilizer').value;
+      const simulateBtn = document.getElementById('simulateForecast');
+      simulateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Simulating...';
+      
+      // Simulation delay (simulate API call)
+      setTimeout(() => {
+        const baseForecast = [83.99,86.62,88.39,88.72,91.84,93.25,94.15,95.10,96.32,97.05,96.18,95.20];
+        const fuelFactor = fuelPrice / 104;
+        const exchangeFactor = exchangeRate / 200;
+        const updatedForecast = baseForecast.map((val, i) => {
+          if (i >= 4) {
+            return (val * (1 + (fuelFactor - 1)*0.4) * (1 + (exchangeFactor - 1)*0.35)).toFixed(2);
+          }
+          return val;
+        });
+        // Update forecast chart
+        forecastChart.data.datasets[1].data = updatedForecast;
+        // Calculate confidence intervals (simplified)
+        const upperCI = updatedForecast.map(val => parseFloat(val) + parseFloat(val)*0.05);
+        const lowerCI = updatedForecast.map(val => parseFloat(val) - parseFloat(val)*0.05);
+        // Update datasets for confidence intervals (assume first 4 values remain unchanged)
+        forecastChart.data.datasets[2].data = baseForecast.slice(0,4).concat(upperCI.slice(4));
+        forecastChart.data.datasets[3].data = baseForecast.slice(0,4).concat(lowerCI.slice(4));
+        forecastChart.update();
+        // Update simulation results
+        document.getElementById('predictedPrice').textContent = `₨ ${updatedForecast[4]}`;
+        const priceChange = ((updatedForecast[4] / 93.82 - 1)*100).toFixed(2);
+        const priceChangeEl = document.getElementById('priceChange');
+        priceChangeEl.textContent = `${priceChange > 0 ? '+' : ''}${priceChange}%`;
+        priceChangeEl.className = priceChange > 0 ? 'text-4xl font-bold text-green-600' : 'text-4xl font-bold text-red-600';
+        simulateBtn.innerHTML = '<i class="fas fa-play mr-2"></i> Run Simulation';
+      }, 1500);
+    });
+    
+    // Time filter for main chart
+    document.querySelectorAll('.time-filter').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.time-filter').forEach(b => {
+          b.classList.remove('bg-primary-500', 'text-white');
+          b.classList.add('text-gray-600');
+        });
+        this.classList.remove('text-gray-600');
+        this.classList.add('bg-primary-500', 'text-white');
+        const period = this.textContent;
+        let dataWindow = 12;
+        if (period === '6M') dataWindow = 6;
+        if (period === '3M') dataWindow = 3;
+        if (period === '1M') dataWindow = 1;
+        mainChart.data.labels = mainChart.data.labels.slice(0, dataWindow);
+        mainChart.data.datasets.forEach(dataset => {
+          dataset.data = dataset.data.slice(0, dataWindow);
+        });
+        mainChart.update();
+      });
+    });
+    
+    // Forecast period filter
+    document.querySelectorAll('.forecast-period').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.forecast-period').forEach(b => {
+          b.classList.remove('bg-primary-500', 'text-white');
+          b.classList.add('text-gray-600');
+        });
+        this.classList.remove('text-gray-600');
+        this.classList.add('bg-primary-500', 'text-white');
+        const period = this.textContent;
+        let forecastWindow = 12;
+        if (period === '6M') forecastWindow = 6;
+        if (period === '3M') forecastWindow = 3;
+        forecastChart.data.labels = forecastChart.data.labels.slice(0, forecastWindow);
+        forecastChart.data.datasets.forEach(dataset => {
+          dataset.data = dataset.data.slice(0, forecastWindow);
+        });
+        forecastChart.update();
+      });
+    });
+    
+    // Download CSV functionality for Forecast
+    document.getElementById('downloadForecastCSV').addEventListener('click', () => {
+      const headers = ['Date','Actual Prices','TFT Predicted','CI Upper','CI Lower'];
+      const rows = forecastChart.data.labels.map((month, i) => {
+        return [
+          `2023-${String(i+1).padStart(2, '0')}-01`,
+          forecastChart.data.datasets[0].data[i] || '',
+          forecastChart.data.datasets[1].data[i] || '',
+          forecastChart.data.datasets[2].data[i] || '',
+          forecastChart.data.datasets[3].data[i] || ''
+        ].join(',');
+      });
+      const csvData = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csvData], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cocolytics_forecast.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+    
+    // Download chart image functionality for Forecast
+    document.getElementById('downloadForecastImage').addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = forecastChart.toBase64Image();
+      link.download = 'cocolytics_forecast.png';
+      link.click();
+    });
+    
+    // Multi-language support using i18next
+    i18next.init({
+      lng: 'en',
+      resources: {
+        en: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "Dashboard",
+            "historical": "Historical Data",
+            "forecastNav": "Forecast Viewer",
+            "comparisonNav": "Model Comparison",
+            "downloadsNav": "Downloads",
+            "language": "Language",
+            "currentDate": "Current Date",
+            "welcomeDashboard": "Welcome to Cocolytics AI",
+            "dashboardIntro": "Your one-stop solution for coconut price forecasting in Sri Lanka.",
+            "bestModel": "Best Model",
+            "accuracy": "Accuracy",
+            "currentTrend": "Current Trend",
+            "monthlyChange": "Monthly Change",
+            "currentPrice": "Current Price",
+            "predictedNext": "Next Month",
+            "priceOverview": "Price Overview",
+            "keyInsights": "Key Insights",
+            "nextForecast": "Next 12 Months Forecast",
+            "peakMonth": "Peak Month",
+            "viewDetailedForecast": "View Detailed Forecast",
+            "forecastViewer": "Forecast Viewer",
+            "forecastDesc": "View and simulate future coconut price projections.",
+            "forecastChart": "Forecast Chart",
+            "simulationOptions": "Simulation Options",
+            "simulationDesc": "Adjust parameters to see how different factors affect coconut prices.",
+            "fuelPrice": "Fuel Price (LKR)",
+            "exchangeRate": "Exchange Rate (LKR/USD)",
+            "rainfall": "Rainfall (mm/month)",
+            "fertilizer": "Fertilizer Price (LKR/kg)",
+            "simulate": "Run Simulation",
+            "predictedPrice": "Predicted Price",
+            "nextMonthAvg": "Next Month Average",
+            "priceChange": "Price Change",
+            "fromCurrentPrice": "From Current Price",
+            "priceVolatility": "Price Volatility",
+            "confidenceLevel": "85% Confidence Level",
+            "exportForecast": "Download Center",
+            "downloadDesc": "Access and export data, reports, and visuals.",
+            "rawData": "Raw Data",
+            "historicalPrices": "Historical Prices (2018-2025)",
+            "forecastData": "Forecast Data (12 months)",
+            "auxVariables": "Auxiliary Variables",
+            "downloadData": "Download Data",
+            "reports": "Reports",
+            "monthlyReport": "Monthly Market Report",
+            "quarterlyForecast": "Quarterly Forecast Analysis",
+            "modelMethodology": "Model Methodology",
+            "downloadReports": "Download Reports",
+            "visuals": "Visuals",
+            "charts": "Interactive Charts",
+            "infographics": "Infographics",
+            "presentations": "Presentation Slides",
+            "downloadVisuals": "Download Visuals",
+            "customExport": "Custom Export Tool",
+            "customExportDesc": "Create personalized data extracts and reports.",
+            "dateRange": "Date Range",
+            "fileFormat": "File Format",
+            "includeAnalysis": "Include analysis and insights",
+            "generateExport": "Generate Custom Export",
+            "recentDownloads": "Recent Downloads",
+            "forecastViewer": "Forecast Viewer",
+            "downloadCSV": "Download CSV",
+            "downloadExcel": "Download Excel",
+            "downloadImage": "Download Chart Image",
+            "shareForecast": "Share Forecast"
+          }
+        },
+        si: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "Dashboard",
+            "historical": "ඉතිහාස දත්ත",
+            "forecastNav": "පූර්වකථන දර්ශකය",
+            "comparisonNav": "ආදර්ශ සසඳීම",
+            "downloadsNav": "බාගත කිරීම",
+            "language": "භාෂාව",
+            "currentDate": "වත්මන් දිනය",
+            "welcomeDashboard": "Cocolytics AI වෙත සාදරයෙන් පිළිගනිමු",
+            "dashboardIntro": "ශ්‍රී ලංකාවේ පොත්පල මිල පූර්වකථනය සඳහා ඔබේ එකම විසඳුම.",
+            "bestModel": "හොඳම ආදර්ශය",
+            "accuracy": "නිවැරදිත්වය",
+            "currentTrend": "වත්මන් ප්‍රවණතාව",
+            "monthlyChange": "මාසික වෙනස",
+            "currentPrice": "වත්මන් මිල",
+            "predictedNext": "ඊළඟ මාසය",
+            "priceOverview": "මිල අවලංගුකරණය",
+            "keyInsights": "ප්‍රධාන අවබෝධ",
+            "nextForecast": "ඊළඟ 12 මාස පූර්වකථනය",
+            "peakMonth": "උසස් මාසය",
+            "viewDetailedForecast": "විස්තරාත්මක පූර්වකථනය බලන්න",
+            "forecastViewer": "පූර්වකථන දර්ශකය",
+            "forecastDesc": "ඊළඟ පොත්පල මිල පූර්වකථන හා අනුකරණ බලන්න.",
+            "forecastChart": "පූර්වකථන චාට්",
+            "simulationOptions": "අනුකරණ විකල්ප",
+            "simulationDesc": "විවිධ සාධක කොපමණ බලපාන්නේදැයි බැලීමට පරාමිතීන් වෙනස් කරන්න.",
+            "fuelPrice": "උල්පාධන මිල (LKR)",
+            "exchangeRate": "අනුපාතිකය (LKR/USD)",
+            "rainfall": "වැසිපිහිටීම (මසකට mm)",
+            "fertilizer": "පොහොර මිල (LKR/kg)",
+            "simulate": "අනුකරණය කරන්න",
+            "predictedPrice": "පූර්වකථනය කරන ලද මිල",
+            "nextMonthAvg": "ඊළඟ මාස සාමාන්‍යය",
+            "priceChange": "මිල වෙනස",
+            "fromCurrentPrice": "වත්මන් මිලට සාපේක්ෂව",
+            "priceVolatility": "මිල අවලංගුකරණය",
+            "confidenceLevel": "85% විශ්වාසනීයතාවය",
+            "exportForecast": "බාගත කිරීමේ මධ්‍යස්ථානය",
+            "downloadDesc": "දත්ත, වාර්තා සහ දෘශ්‍ය නිර්මාණ බාගත කරන්න.",
+            "rawData": "මුල් දත්ත",
+            "historicalPrices": "ඉතිහාස මිල (2018-2025)",
+            "forecastData": "පූර්වකථන දත්ත (12 මාස)",
+            "auxVariables": "අතිරේක සාධක",
+            "downloadData": "දත්ත බාගත කරන්න",
+            "reports": "වාර්තා",
+            "monthlyReport": "මාසික වාර්තාව",
+            "quarterlyForecast": "තුන්මාසික පූර්වකථන විශ්ලේෂණය",
+            "modelMethodology": "ආදර්ශ ක්‍රමවේදය",
+            "downloadReports": "වාර්තා බාගත කරන්න",
+            "visuals": "දෘශ්‍ය",
+            "charts": "අන්තර්ක්‍රියාත්මක චාට්",
+            "infographics": "ඉන්ෆෝග්‍රැෆික්",
+            "presentations": "ප්‍රස්තූතික පත්‍ර",
+            "downloadVisuals": "දෘශ්‍ය බාගත කරන්න",
+            "customExport": "අභිරුචිකරණ ආයතනය",
+            "customExportDesc": "පුද්ගලික දත්ත හා වාර්තා සාදන්න.",
+            "dateRange": "දිනයේ පරාසය",
+            "fileFormat": "ගොනු ආකාරය",
+            "includeAnalysis": "විශ්ලේෂණ සහ අවබෝධ ඇතුළත් කරන්න",
+            "generateExport": "අභිරුචිකරණය ජනනය කරන්න",
+            "recentDownloads": "අලුත්ම බාගත කිරීම්",
+            "downloadCSV": "CSV බාගත කරන්න",
+            "downloadExcel": "Excel බාගත කරන්න",
+            "downloadImage": "චාට් රූපය බාගත කරන්න",
+            "shareForecast": "පූර්වකථනය බෙදාගන්න"
+          }
+        },
+        ta: {
+          translation: {
+            "toolName": "Cocolytics AI",
+            "dashboard": "Dashboard",
+            "historical": "வரலாற்று தரவுகள்",
+            "forecastNav": "முன்னறிவிப்பு காட்சியாளர்",
+            "comparisonNav": "மாதிரி ஒப்பீடு",
+            "downloadsNav": "பதிவிறக்கம்",
+            "language": "மொழி",
+            "currentDate": "தற்போதைய தேதி",
+            "welcomeDashboard": "Cocolytics AI -க்கு வரவேற்பு",
+            "dashboardIntro": "இலங்கையில் தேங்காய் விலை முன்னறிவிப்பிற்கான உங்கள் ஒரே தீர்வு.",
+            "bestModel": "சிறந்த மாதிரி",
+            "accuracy": "துல்லியம்",
+            "currentTrend": "தற்போதைய போக்கு",
+            "monthlyChange": "மாதாந்திர மாற்றம்",
+            "currentPrice": "தற்போதைய விலை",
+            "predictedNext": "அடுத்த மாதம்",
+            "priceOverview": "விலை மேற்பார்வை",
+            "keyInsights": "முக்கிய கருத்துக்கள்",
+            "nextForecast": "அடுத்த 12 மாத முன்னறிவிப்பு",
+            "peakMonth": "உயர் மாதம்",
+            "viewDetailedForecast": "விரிவான முன்னறிவிப்பை பாருங்கள்",
+            "forecastViewer": "முன்னறிவிப்பு காட்சியாளர்",
+            "forecastDesc": "எதிர்கால தேங்காய் விலை முன்னறிவிப்புகளையும், சிமுலேஷனையும் பாருங்கள்.",
+            "forecastChart": "முன்னறிவிப்பு வரைபடம்",
+            "simulationOptions": "சிமுலேஷன் விருப்பங்கள்",
+            "simulationDesc": "விலை மீது பல்வேறு காரணிகள் எப்படி பாதிக்கின்றன என பார்க்க பின்வரும் அளவுகோல்களை மாற்றுங்கள்.",
+            "fuelPrice": "எரிபொருள் விலை (LKR)",
+            "exchangeRate": "பரிமாற்ற விகிதம் (LKR/USD)",
+            "rainfall": "மழை (மாதத்திற்கு mm)",
+            "fertilizer": "உர விலை (LKR/kg)",
+            "simulate": "சிமுலேட் செய்யவும்",
+            "predictedPrice": "முன்னறிவிக்கப்பட்ட விலை",
+            "nextMonthAvg": "அடுத்த மாத சராசரி",
+            "priceChange": "விலை மாற்றம்",
+            "fromCurrentPrice": "தற்போதைய விலையிலிருந்து",
+            "priceVolatility": "விலை மாறுபாடு",
+            "confidenceLevel": "85% நம்பகத்தன்மை",
+            "exportForecast": "பதிவிறக்கம் மையம்",
+            "downloadDesc": "தரவு, அறிக்கைகள் மற்றும் வரைபடங்களைப் பெறுங்கள்.",
+            "rawData": "அசல் தரவு",
+            "historicalPrices": "வரலாற்று விலைகள் (2018-2025)",
+            "forecastData": "முன்னறிவிப்பு தரவு (12 மாதம்)",
+            "auxVariables": "உதவி மாறிகள்",
+            "downloadData": "தரவை பதிவிறக்கம் செய்யவும்",
+            "reports": "அறிக்கைகள்",
+            "monthlyReport": "மாதாந்திர சந்தை அறிக்கை",
+            "quarterlyForecast": "காலாண்டு முன்னறிவிப்பு பகுப்பாய்வு",
+            "modelMethodology": "மாதிரி செயல்முறை",
+            "downloadReports": "அறிக்கைகளை பதிவிறக்கம் செய்யவும்",
+            "visuals": "வரைபடங்கள்",
+            "charts": "இணையத்தொடர்பான வரைபடங்கள்",
+            "infographics": "அறிக்கை வரைவியல்",
+            "presentations": "வழக்கமான ப்ரெசெண்டேஷன்கள்",
+            "downloadVisuals": "வரைபடங்களை பதிவிறக்கம் செய்யவும்",
+            "customExport": "தனிப்பயன் ஏற்றுமதி கருவி",
+            "customExportDesc": "தனிப்பயன் தரவுத் தொகுப்புகள் மற்றும் அறிக்கைகளை உருவாக்குங்கள்.",
+            "dateRange": "தேதித் தளம்",
+            "fileFormat": "கோப்பு வடிவம்",
+            "includeAnalysis": "பகுப்பாய்வும் உள்ளடக்கவும்",
+            "generateExport": "தனிப்பயன் ஏற்றுமதியை உருவாக்கவும்",
+            "recentDownloads": "சமீபத்திய பதிவிறக்கங்கள்",
+            "downloadCSV": "CSV பதிவிறக்கம்",
+            "downloadExcel": "Excel பதிவிறக்கம்",
+            "downloadImage": "வரைபடத்தை பதிவிறக்கம்",
+            "shareForecast": "முன்னறிவிப்பை பகிர்ந்து கொள்ளவும்"
+          }
+        }
+      }
+    }, function(err, t) {
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        el.innerText = i18next.t(el.getAttribute('data-i18n'));
+      });
+    });
+    
+    document.getElementById('languageSelector').addEventListener('change', function() {
+      const newLang = this.value;
+      i18next.changeLanguage(newLang, function() {
+        document.querySelectorAll('[data-i18n]').forEach(function(el) {
+          el.innerText = i18next.t(el.getAttribute('data-i18n'));
+        });
+      });
+    });
+  </script>
+</body>
+</html>
