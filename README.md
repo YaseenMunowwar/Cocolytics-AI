@@ -11,7 +11,7 @@
 
 ## 🚀 Overview
 
-**Cocolytics AI** is the **first multivariate, attention-based forecasting system** built specifically for Sri Lanka’s coconut market. Leveraging 28 years of monthly retail prices and key exogenous drivers (district-level producer prices, diesel costs, USD/LKR exchange rates), it delivers:
+**Cocolytics AI** is the **first multivariate, attention-based forecasting system** built specifically for Sri Lanka’s coconut market. After trained on 28 years of monthly retail prices and key exogenous drivers (district-level producer prices, diesel costs, USD/LKR exchange rates), it delivers:
 
 - **State-of-the-art accuracy** via the Temporal Fusion Transformer  
 - **Interpretability** through dynamic attention heat-maps  
